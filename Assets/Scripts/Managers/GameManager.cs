@@ -93,5 +93,10 @@ public class GameManager : MonoBehaviour
             StartNight();
         }
     }
+
+    public void Win()
+    {
+        Debug.Log("Ganaste.");
+    }
     
 }

@@ -9,12 +9,12 @@ public class SurveillanceSystem : MonoBehaviour
 {
     public static SurveillanceSystem Instance {get; private set;}
 
-    [SerializeField] private Camera[] cameras;
     [SerializeField] private Camera officeCamera;
-    [SerializeField] private Camera currentCamera;
+    [SerializeField] private Camera surveillanceCamera;
     [SerializeField] private Canvas canvas;
+    [SerializeField] private GameObject[] uICamera;
+    [SerializeField] private float toggleDuration;
 
-    private Dictionary<string, Camera> surveillanceCameras;
     private Animator animator;
     private bool isCameraUp = false;
     private bool canToggle = true;
@@ -22,14 +22,7 @@ public class SurveillanceSystem : MonoBehaviour
     private void Start() 
     {
         SingletonLogic();
-        AssembleResources();
         animator = GetComponent<Animator>();
-        currentCamera = surveillanceCameras["1A"];
-    }
-
-    private void Update() 
-    {
-
     }
 
     private void SingletonLogic()
@@ -40,17 +33,13 @@ public class SurveillanceSystem : MonoBehaviour
         }else if (Instance != this) Destroy(gameObject);
     }
 
-    private void AssembleResources()
-    {
-        surveillanceCameras = cameras.ToDictionary(x => x.name, x => x);
-    }
     public void ToggleCamera()
     {
         if(!canToggle) return;
         if(isCameraUp)
         {
             isCameraUp = false;
-            transform.position = new Vector3(currentCamera.transform.position.x, currentCamera.transform.position.y, transform.position.z);
+            transform.position = new Vector3(surveillanceCamera.transform.position.x, surveillanceCamera.transform.position.y, transform.position.z);
             animator.Play("FlipDown");
         }
         else
@@ -60,7 +49,7 @@ public class SurveillanceSystem : MonoBehaviour
             animator.Play("FlipUp");
             
         }
-        StartCoroutine(WaitToToogle(0.75f));
+        StartCoroutine(WaitToToogle(toggleDuration));
     }
 
     private void UpdateCameraCanvas(Camera camera)
@@ -70,16 +59,24 @@ public class SurveillanceSystem : MonoBehaviour
     
     private void RaisingCameraMonitor()
     {
-        currentCamera.enabled = true;
+        surveillanceCamera.enabled = true;
         officeCamera.enabled = false;
-        UpdateCameraCanvas(currentCamera);
+        foreach(GameObject uIItem in uICamera)
+        {
+            uIItem.SetActive(true);
+        }
+        UpdateCameraCanvas(surveillanceCamera);
     }
 
     private void LoweringCameraMonitor()
     {
         transform.position = new Vector3(officeCamera.transform.position.x, officeCamera.transform.position.y, transform.position.z);
         officeCamera.enabled = true;
-        currentCamera.enabled = false;
+        surveillanceCamera.enabled = false;
+        foreach(GameObject uIItem in uICamera)
+        {
+            uIItem.SetActive(false);
+        }
         UpdateCameraCanvas(officeCamera);
     }
 

@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [Header("Camera Movement configuration")]
-    public float velocidadMovimiento = 4f;
-    public float margenMovimiento = 4f;
-    public float margenMouse = 2.5f;
-    public float limiteMouse = 5f;
+    public float movementSpeed = 4f;
+    public float movementThreshold = 4f;
+    public float startPoint = 2.5f; //if the mouse has x position greater than |this|, then the camera will move
+    public float mouseThreshold = 5f;
 
-    private float movimiento = 0f;
+    private float distance = 0f;
     private Vector2 mousePosition;
     
     private void Update() 
@@ -23,22 +22,22 @@ public class CameraMovement : MonoBehaviour
         if(!GetComponent<Camera>().enabled) return;
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        float max = limiteMouse - margenMouse;                  // 5 - 2.5 = 2.5 => 100%
-        float speed = Mathf.Abs(mousePosition.x) - margenMouse; // 3 - 2.5 = 0.5 => ?%
+        float max = mouseThreshold - startPoint;                  // 5 - 2.5 = 2.5 => 100%
+        float speed = Mathf.Abs(mousePosition.x) - startPoint; // 3 - 2.5 = 0.5 => ?%
 
         speed = speed / max;                                    // 0.5 / 2.5 = 0.2 => 20%
 
 
-        if (mousePosition.x > margenMouse)
+        if (mousePosition.x > startPoint)
         {
-            movimiento += velocidadMovimiento * speed * Time.deltaTime;
+            distance += movementSpeed * speed * Time.deltaTime;
         }
-        else if (mousePosition.x < -margenMouse)
+        else if (mousePosition.x < -startPoint)
         {
-            movimiento -= velocidadMovimiento * speed * Time.deltaTime;
+            distance -= movementSpeed * speed * Time.deltaTime;
         }
 
-        movimiento = Mathf.Clamp(movimiento, -margenMovimiento, margenMovimiento);
-        transform.position = new Vector3(movimiento, 0f, transform.position.z);
+        distance = Mathf.Clamp(distance, -movementThreshold, movementThreshold);
+        transform.position = new Vector3(distance, 0f, transform.position.z);
     }
 }
