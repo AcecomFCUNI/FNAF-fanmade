@@ -6,10 +6,11 @@ public class DoorButton : MonoBehaviour
 {
     [SerializeField] private int id; // 0 is left, 1 is right
     [SerializeField] private Animator doorAnimator;
+    [SerializeField] private float waitToToggleDuration = 0.5f;
     private Animator buttonAnimator;
     private AudioSource audioSource;
     private bool isOpen = true;
-    
+    private bool canHitButton = true;
     
 
     private void Start() 
@@ -24,6 +25,7 @@ public class DoorButton : MonoBehaviour
 
     private void ToogleDoor()
     {
+        if(!canHitButton) return;
         if(isOpen)
         {
             isOpen = false;
@@ -38,5 +40,18 @@ public class DoorButton : MonoBehaviour
             doorAnimator.SetBool("isOpen", isOpen);
             audioSource.Play();
         }
+        StartCoroutine(WaitToToogle(waitToToggleDuration));
+    }
+
+    IEnumerator WaitToToogle(float duration)
+    {
+        float time = 0;
+        canHitButton = false;
+        while(time < duration)
+        {
+            time += Time.deltaTime;
+            yield return null;
+        }
+        canHitButton = true;
     }
 }

@@ -6,8 +6,14 @@ using UnityEngine.EventSystems;
 
 public class CameraTrigger : MonoBehaviour, IPointerEnterHandler
 {
+    [SerializeField] private SurveillanceSystem surveillanceSystem;
+    private AudioSource audioSource;
+    private void Start() 
+    {
+        audioSource = GetComponent<AudioSource>();    
+    }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        SurveillanceSystem.Instance.ToggleCamera();
+        if(surveillanceSystem.ToggleCamera()) audioSource.Play();
     }
 }

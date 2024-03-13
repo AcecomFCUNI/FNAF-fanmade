@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class SurveillanceCamera : MonoBehaviour
 {
-    [SerializeField] private string cameraName;
     [SerializeField] private float moveThreshold;
     [SerializeField] private float speed;
-
+    
+    public Camera camera;
     private Vector3[] waypoints = new Vector3[2];
     private GameObject staticImage;
-    private Camera camera;
     private int index = 0;
     private bool isWaiting;
+    public Vector3 initialPosition;
 
     private void Start() 
     {
@@ -25,14 +25,14 @@ public class SurveillanceCamera : MonoBehaviour
     {
         MoveCamera();
     }
-    private void ActivateCamera()
+    public void ActivateCamera()
     {
-
+        camera.enabled = true;
     }
 
-    private void DeactivateCamera()
+    public void DeactivateCamera()
     {
-
+        camera.enabled = false;
     }
 
     private void MoveCamera()
@@ -43,7 +43,7 @@ public class SurveillanceCamera : MonoBehaviour
 
         if(transform.position == waypoints[index]) 
         {
-            StartCoroutine(WaitThenKeepMoving(1.5f));
+            StartCoroutine(WaitThenKeepMoving(2f));
             index = (index + 1)%2;
         }
     }
