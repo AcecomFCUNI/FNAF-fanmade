@@ -15,7 +15,8 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        SetUpGame();    
+        SetUpGame();  
+        UpdateNightText();  
     }
 
     private void SetUpGame()

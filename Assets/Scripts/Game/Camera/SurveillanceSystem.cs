@@ -12,14 +12,19 @@ public class SurveillanceSystem : MonoBehaviour
     [SerializeField] private Canvas canvas;
     [SerializeField] private Vector3 auxPosition;
     [SerializeField] private float toggleDuration;
+    [SerializeField] private AudioSource fanAS;
     [SerializeField] private GameObject[] uICamera;
     [SerializeField] private Room[] rooms;
-    [SerializeField] private AudioSource fanAS;
+    [SerializeField] private GameObject[] cameraSounds;
     
+
     private Dictionary<string,Room> roomsDict;
     private Room currentRoom;
     private Animator animator;
     private AudioSource audioSource;
+    private GameObject aux1;
+    private GameObject aux2;
+    private GameObject aux3;
     private bool isCameraUp = false;
     private bool canToggle = true;
 
@@ -31,26 +36,33 @@ public class SurveillanceSystem : MonoBehaviour
         currentRoom = roomsDict["1A"];
     }
 
-    public bool ToggleCamera()
+    public void ToggleCamera()
     {
-        if(!canToggle) return canToggle;
+        if(!canToggle) return;
         if(isCameraUp)
         {
+            if(aux2 != null) Destroy(aux2);
+            if(aux3 != null) Destroy(aux3);
             isCameraUp = false;
             transform.position = new Vector3(surveillanceCamera.transform.position.x, surveillanceCamera.transform.position.y, transform.position.z);
-            fanAS.volume = 0.8f;
+            fanAS.volume = 0.5f;
+            aux1 = Instantiate(cameraSounds[0]);
+            Destroy(aux1,5);
             animator.Play("FlipDown");
         }
         else
         {
             isCameraUp = true;
             transform.position = new Vector3(officeCamera.transform.position.x, officeCamera.transform.position.y, transform.position.z);
-            fanAS.volume = 0.35f;
+            fanAS.volume = 0.15f;
+            aux2 = Instantiate(cameraSounds[1], surveillanceCamera.transform.position, Quaternion.identity);
+            aux3 = Instantiate(cameraSounds[2], surveillanceCamera.transform.position, Quaternion.identity);
+            Destroy(aux2,10);
+            Destroy(aux3,20);
             animator.Play("FlipUp");
             
         }
         StartCoroutine(WaitToToogle(toggleDuration));
-        return true;
     }
 
     private void AssembleResources()

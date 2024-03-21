@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance {get; private set;}
     public int night = 1;
     public bool isStarting;
+    public bool gameOver;
     
     [SerializeField]private GameObject nightObj;
     [SerializeField]private Image nightImage;
@@ -34,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        gameOver = false;
         nightObj = GameObject.FindWithTag("Night");
         chargingIcon = GameObject.FindWithTag("Charging Icon");
         nightImage = nightObj.GetComponent<Image>();

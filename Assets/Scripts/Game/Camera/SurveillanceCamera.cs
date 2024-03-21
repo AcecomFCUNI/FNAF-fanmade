@@ -7,12 +7,13 @@ public class SurveillanceCamera : MonoBehaviour
     [SerializeField] private float moveThreshold;
     [SerializeField] private float speed;
     
-    public Camera camera;
     private Vector3[] waypoints = new Vector3[2];
     private GameObject staticImage;
     private int index = 0;
     private bool isWaiting;
+    
     public Vector3 initialPosition;
+    public Camera camera;
 
     private void Start() 
     {
@@ -25,6 +26,7 @@ public class SurveillanceCamera : MonoBehaviour
     {
         MoveCamera();
     }
+    
     public void ActivateCamera()
     {
         camera.enabled = true;

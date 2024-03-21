@@ -57,10 +57,14 @@ public class LightButton : MonoBehaviour
     IEnumerator DoLightsAnimation(float duration)
     {
         float time = 0;
+        int randomNumber;
         while (time < duration)
         {
             if(!isOn) break;
-            officeAnimator.SetFloat("randomNumber", Random.Range(0, 40));
+            randomNumber = Random.Range(0, 40);
+            officeAnimator.SetFloat("randomNumber", randomNumber);
+            if(randomNumber <4) audioSource.Pause();
+            else audioSource.UnPause();
             time += Time.deltaTime;
             yield return null;
         }
